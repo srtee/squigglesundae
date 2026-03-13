@@ -77,9 +77,88 @@ results = engine.search(
 
 | Script | Purpose |
 |--------|---------|
-| `scripts/bulk_init.py` | Bulk import corpus (50% initialization) |
+| `scripts/bulk_init.py` | Bulk import corpus (50% initialization) to local Chroma DB |
+| `scripts/import_to_kv.py` | Bulk import to Cloudflare Workers KV |
+| `scripts/import_to_kv_fast.py` | Faster parallel import to Workers KV |
 | `scripts/ingest_post.py` | Add single new post |
 | `scripts/test_workflow.py` | Run tests |
+
+## Importing from Slack (Waves Archive)
+
+If your community uses Slack and the Waves archive service, you can bulk import introduction posts.
+
+### 1. Export from Waves
+
+Export your Slack workspace data. Waves typically provides:
+- JSON files per channel
+- User directory with profile info
+- Message files with timestamps
+
+### 2. Identify Intro Posts
+
+Look for posts in your #introductions or similar channel. Typical patterns:
+- First-time posts from new members
+- Posts matching your onboarding flow
+
+### 3. Convert to JSONL Format
+
+Create a conversion script or manually extract posts. Example:
+
+```python
+# convert_waves.py - Example conversion script
+import json
+import os
+
+def convert_waves_export(waves_export_path, output_file):
+    """Convert Waves Slack export to JSONL format."""
+    
+    with open(output_file, 'w') as out:
+        # Load your Waves export files
+        # Adjust based on Waves' actual format
+        
+        for channel_file in os.listdir(f"{waves_export_path}/channels"):
+            if "introduction" not in channel_file.lower():
+                continue
+                
+            with open(f"{waves_export_path}/channels/{channel_file}") as f:
+                messages = json.load(f)
+                
+            for msg in messages:
+                # Filter for intro posts (adjust criteria as needed)
+                if is_intro_post(msg):
+                    post = {
+                        "post_id": msg.get("ts"),  # or generate UUID
+                        "member_id": msg.get("user"),
+                        "member_name": get_user_name(msg.get("user"), waves_export_path),
+                        "text": msg.get("text"),
+                        "city": get_user_field(msg.get("user"), "city", waves_export_path),
+                        "country": get_user_field(msg.get("user"), "country", waves_export_path),
+                        "region": get_user_field(msg.get("user"), "region", waves_export_path),
+                    }
+                    out.write(json.dumps(post) + '\n')
+
+def is_intro_post(msg):
+    """Determine if message is an intro post."""
+    # Add your criteria - e.g., channel name, message patterns, etc.
+    return True  # Adjust as needed
+```
+
+### 4. Import
+
+```bash
+# Local Chroma DB
+python scripts/bulk_init.py --input data/converted_intros.jsonl
+
+# Or to Cloudflare Workers KV
+python scripts/import_to_kv_fast.py --input data/converted_intros.jsonl --env .env
+```
+
+### Tips
+
+- **Deduplicate**: Check for duplicate posts by `post_id` or `member_id`
+- **Text cleaning**: Remove @mentions, emojis, or URLs if needed
+- **Metadata**: Extract location from user profiles in Waves user directory
+- **Chunking**: If posts are very long, consider chunking before embedding
 
 ## Drift Prevention
 
