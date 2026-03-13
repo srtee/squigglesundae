@@ -30,7 +30,7 @@ jsContent = jsContent.replace(
 );
 
 // Inject password from secret (fallback to placeholder if not set)
-const passwordPlaceholder = 'GenerallyVibeCodedWithLove';
+const passwordPlaceholder = 'PLACEHOLDER_PASSWORD';
 const passwordToUse = FRONTEND_PASSWORD || passwordPlaceholder;
 jsContent = jsContent.replace(
     `'${passwordPlaceholder}'`,
