@@ -1,0 +1,21 @@
+{
+  "name": "intro-post-search-workers",
+  "version": "1.0.0",
+  "description": "Cloudflare Workers for community intro post search",
+  "scripts": {
+    "deploy:ingest": "wrangler deploy --config wrangler.toml src/ingest.ts",
+    "deploy:search": "wrangler deploy --config search-wrangler.toml src/search.ts",
+    "deploy": "wrangler deploy --config combined-wrangler.toml src/index.ts",
+    "dev:ingest": "wrangler dev --config wrangler.toml src/ingest.ts",
+    "dev:search": "wrangler dev --config search-wrangler.toml src/search.ts",
+    "dev": "wrangler dev --config combined-wrangler.toml src/index.ts",
+    "test": "vitest",
+    "check": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20241106.0",
+    "typescript": "^5.7.2",
+    "vitest": "^2.1.8",
+    "wrangler": "^3.101.0"
+  }
+}
