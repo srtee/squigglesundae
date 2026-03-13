@@ -1,4 +1,4 @@
-const PASSWORD = 'PLACEHOLDER_PASSWORD';
+const PASSWORD = 'generalistworld';
 const API_BASE = window.API_BASE || '';
 
 // DOM Elements
