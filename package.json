@@ -1,0 +1,15 @@
+{
+  "name": "squigglesundae",
+  "version": "1.0.0",
+  "description": "Neural-network NLP system for community intro post search",
+  "private": true,
+  "scripts": {
+    "frontend:install": "cd frontend && npm install",
+    "frontend:build": "cd frontend && npm install && npm run build",
+    "frontend:deploy": "cd frontend && npm run deploy",
+    "frontend:preview": "cd frontend && npm run preview"
+  },
+  "devDependencies": {
+    "gh-pages": "^6.1.1"
+  }
+}

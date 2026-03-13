@@ -55,3 +55,11 @@ Thumbs.db
 # Model cache
 models/
 .cache/
+
+# Frontend build
+frontend/dist/
+
+# Node modules
+frontend/node_modules/
+workers/node_modules/
+node_modules/

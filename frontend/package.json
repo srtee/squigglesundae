@@ -1,0 +1,14 @@
+{
+  "name": "intro-post-search-frontend",
+  "version": "1.0.0",
+  "description": "Frontend for community intro post search",
+  "scripts": {
+    "build": "node build.js",
+    "preview": "npx serve dist",
+    "deploy": "node build.js && gh-pages -d dist -b gh-pages",
+    "deploy:preview": "node build.js && npx serve dist"
+  },
+  "devDependencies": {
+    "gh-pages": "^6.1.1"
+  }
+}

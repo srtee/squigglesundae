@@ -93,6 +93,47 @@ This system uses **static pre-trained embeddings** (not fine-tuned on community 
 
 For serverless deployment (Lambda/GCF/Azure Functions), use `scripts/ingest_post.py` as the handler. The script accepts JSON input and writes to the vector database.
 
+## Frontend
+
+The frontend is a password-protected web interface for searching posts.
+
+### Build & Deploy to GitHub Pages
+
+#### Option 1: GitHub Actions (Recommended - secrets stored in GitHub)
+
+1. Go to your repo Settings → Secrets and variables → Actions
+2. Add these secrets:
+   - `API_BASE` - Your Cloudflare Workers URL
+   - `FRONTEND_PASSWORD` - Your desired password
+3. Enable GitHub Pages: Settings → Pages → Source = GitHub Actions
+4. Push to main - deployment will happen automatically
+
+#### Option 2: Local Build
+
+```bash
+# Set environment variables
+export API_BASE="https://your-worker.workers.dev"
+export FRONTEND_PASSWORD="YourSecurePassword"
+
+# Build and deploy to gh-pages
+cd frontend
+npm install
+npm run deploy
+```
+
+### Configuration
+
+| Secret | Required | Description |
+|--------|----------|-------------|
+| `API_BASE` | No | Cloudflare Workers URL. If not set, uses current domain. |
+| `FRONTEND_PASSWORD` | No | Password for frontend access. If not set, uses default. |
+
+### Password Protection
+
+Password is stored in GitHub secrets (not in source code) and injected at build time.
+
+Note: This is client-side protection only. For true security, implement authentication at the API level.
+
 ## License
 
 MIT - See LICENSE file
